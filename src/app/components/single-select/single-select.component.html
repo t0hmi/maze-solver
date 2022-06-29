@@ -1,0 +1,12 @@
+<div class="single-select">
+    <div (click)="openDropdown()" class="single-select__label"
+        [ngClass]="{'single-select__label--close': (activeDropdown$ | async) !== label,'single-select__label--open': (activeDropdown$ | async) === label}">
+        {{label}} <img src="/assets/dropdown-icon.svg">
+    </div>
+    <div class="single-select__dropdown"
+        [ngClass]="{'single-select__dropdown--close' : (activeDropdown$ | async) !== label, 'single-select__dropdown--open' : (activeDropdown$ | async) === label}">
+        <div class="dropdown__item" *ngFor="let option of options">
+            {{option}}
+        </div>
+    </div>
+</div>
