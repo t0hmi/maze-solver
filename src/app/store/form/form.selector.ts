@@ -8,7 +8,25 @@ const selectActiveDropdown = createSelector(
   (state: FormState) => state.activeDropdown
 );
 
+const selectMazeGeneration = createSelector(
+  selectForm,
+  (state: FormState) => state.mazeGeneration
+);
+
+const selectSolvingAlgorithm = createSelector(
+  selectForm,
+  (state: FormState) => state.solvingAlgorithm
+);
+
+const selectSpeed = createSelector(
+  selectForm,
+  (state: FormState) => state.speed
+);
+
 export const FormSelector = {
   selectForm,
   selectActiveDropdown,
+  selectMazeGeneration,
+  selectSolvingAlgorithm,
+  selectSpeed,
 };

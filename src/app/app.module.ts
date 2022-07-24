@@ -8,6 +8,8 @@ import { SingleSelectComponent } from './components/single-select/single-select.
 import { StoreModule } from '@ngrx/store';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { metaReducers, reducers } from './store';
+import { MazeComponent } from './components/maze/maze.component';
 
 @NgModule({
   declarations: [
@@ -15,12 +17,17 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     SingleSelectComponent,
     SidebarComponent,
     SingleSelectComponent,
+    MazeComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreDevtoolsModule.instrument({
+      name: 'Pathfinding',
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

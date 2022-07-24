@@ -1,0 +1,44 @@
+:host{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    position: fixed;
+    left: 300px;
+    width: calc(100% - 300px);
+    height: 100%;
+    
+    background-color: #7b7d9e;
+}
+
+
+table {
+
+    border-collapse: collapse;
+
+    tr:nth-child(odd) {
+        td:nth-child(odd) {
+            background-color: rgb(232, 232, 232);
+        }
+        td:nth-child(even) {
+            background-color: white;
+        }
+    }
+    
+    tr:nth-child(even) {
+        td:nth-child(odd) {
+            background-color: white;
+        }
+        td:nth-child(even) {
+            background-color: rgb(232, 232, 232);
+        }
+    }
+
+    td {
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgb(231, 231, 254) !important;
+        }
+    }
+}

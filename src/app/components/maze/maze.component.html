@@ -1,0 +1,8 @@
+<div class="maze" *ngIf="(mazeWidth$ | async) !== 0 else loading">
+    <table>
+        <tr *ngFor="let row of [].constructor(y)">
+            <td *ngFor="let cell of [].constructor(x)" [ngStyle]="{'width.px': cellWidth, 'height.px': cellWidth}"></td>
+        </tr>
+    </table>
+</div>
+<ng-template class="loading" #loading>loading</ng-template>

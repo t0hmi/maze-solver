@@ -1,38 +1,38 @@
 export interface FormState {
   activeDropdown: string;
-  sortingAlgorithm: SortingAlgorithm;
+  solvingAlgorithm: SolvingAlgorithm;
   mazeGeneration: MazeGenerationAlgorithm;
   speed: Speed;
 }
 
-export enum SortingAlgorithm {
-  DFS,
-  A_STAR,
-  DIJKSTRA,
-  BFS,
-  GREEDY_BEST_FIRST,
-  BIDIRECTIONAL_BFS,
+export enum SolvingAlgorithm {
+  DFS = 'DFS',
+  A_STAR = 'A*',
+  DIJKSTRA = 'Dijkstra',
+  BFS = 'BFS',
+  GREEDY_BEST_FIRST = 'Greedy best first',
+  BIDIRECTIONAL_BFS = 'Bidirectional BFS',
 }
 
 export enum MazeGenerationAlgorithm {
-  CUSTOM,
-  KRUSKAL,
-  PRIMS,
-  RECURSIVE_DIVISION,
-  WILSON,
-  RANDOMIZED_DFS,
-  ALDOUS_BRODER,
+  CUSTOM = 'Custom',
+  KRUSKAL = 'Kruskal',
+  PRIMS = 'Prims',
+  RECURSIVE_DIVISION = 'Recursive Division',
+  WILSON = 'Wilson',
+  RANDOMIZED_DFS = 'Randomizd DFS',
+  ALDOUS_BRODER = 'Aldous Broder',
 }
 
 export enum Speed {
-  SLOW,
-  NORMAL,
-  FAST,
+  SLOW = 'Slow',
+  NORMAL = 'Normal',
+  FAST = 'Fast',
 }
 
 export const initialState: FormState = {
   activeDropdown: 'test',
-  sortingAlgorithm: SortingAlgorithm.DFS,
+  solvingAlgorithm: SolvingAlgorithm.DFS,
   mazeGeneration: MazeGenerationAlgorithm.RANDOMIZED_DFS,
   speed: Speed.NORMAL,
 };
