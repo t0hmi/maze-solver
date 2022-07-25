@@ -31,8 +31,8 @@ export enum Speed {
 }
 
 export const initialState: FormState = {
-  activeDropdown: 'test',
+  activeDropdown: '',
   solvingAlgorithm: SolvingAlgorithm.DFS,
-  mazeGeneration: MazeGenerationAlgorithm.RANDOMIZED_DFS,
+  mazeGeneration: MazeGenerationAlgorithm.CUSTOM,
   speed: Speed.NORMAL,
 };

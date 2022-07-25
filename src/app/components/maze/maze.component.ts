@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Settings } from 'src/app/common/settings';
+import { MazeService } from 'src/app/services/maze.service';
 import { MazeSelector } from 'src/app/store/maze/maze.selector';
 
 @Component({
@@ -18,15 +19,21 @@ import { MazeSelector } from 'src/app/store/maze/maze.selector';
 export class MazeComponent implements OnInit, AfterViewInit {
   // numbers of cells : totalwith / cellWidth
 
+  isReady = false;
   mazeWidth$ = this.store.select(MazeSelector.selectMazeWidth);
   mazeHeight$ = this.store.select(MazeSelector.selectMazeHeight);
 
   x: number;
   y: number;
 
+
+  rows : number[]
+  columns : number[]
+
+
   cellWidth = Settings.cellWidth;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private mazeService : MazeService) {}
 
   ngAfterViewInit(): void {
     combineLatest([this.mazeWidth$, this.mazeHeight$])
@@ -38,7 +45,18 @@ export class MazeComponent implements OnInit, AfterViewInit {
       .subscribe((output) => {
         this.x = Math.round((output.width - 150) / Settings.cellWidth);
         this.y = Math.round((output.height - 100) / Settings.cellWidth);
+        
+        this.rows = Array(this.x).fill(0).map((x,i)=>i);
+        this.columns = Array(this.y).fill(0).map((x,i)=>i);
+
+        console.log(this.rows)
+
+        this.isReady = this.mazeService.initializeMaze(this.x, this.y);
       });
+  }
+
+  toggle(x,y) {
+    console.log({x,y})
   }
 
   ngOnInit(): void {}

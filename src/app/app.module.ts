@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { metaReducers, reducers } from './store';
 import { MazeComponent } from './components/maze/maze.component';
+import { CellComponent } from './components/cell/cell.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { MazeComponent } from './components/maze/maze.component';
     SidebarComponent,
     SingleSelectComponent,
     MazeComponent,
+    CellComponent,
   ],
   imports: [
     BrowserModule,
