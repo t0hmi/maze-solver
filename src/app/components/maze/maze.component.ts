@@ -46,17 +46,17 @@ export class MazeComponent implements OnInit, AfterViewInit {
         this.x = Math.round((output.width - 150) / Settings.cellWidth);
         this.y = Math.round((output.height - 100) / Settings.cellWidth);
         
-        this.rows = Array(this.x).fill(0).map((x,i)=>i);
-        this.columns = Array(this.y).fill(0).map((x,i)=>i);
-
-        console.log(this.rows)
+        this.rows = Array(this.y).fill(0).map((x,i)=>i);
+        this.columns = Array(this.x).fill(0).map((x,i)=>i);
 
         this.isReady = this.mazeService.initializeMaze(this.x, this.y);
       });
   }
 
-  toggle(x,y) {
-    console.log({x,y})
+  toggleWall(x,y) {
+    if(!this.mazeService.isWall(x,y)) {
+      this.mazeService.addWall(x,y);
+    }
   }
 
   ngOnInit(): void {}

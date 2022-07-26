@@ -22,9 +22,11 @@ export class Graph {
 
         if(!node) return null;
         
-        this.nodes.forEach( (n) => {
-            n.removeAdjacent(node.getValue());
-        });
+        node.getAdjacent().forEach(adjacentNode => {
+            this.removeEdge(node.getValue(), adjacentNode.getValue())
+        })
+
+        return node;
     }
 
     addEdge(firstNode : string, secondNode : string) : void {
@@ -40,8 +42,8 @@ export class Graph {
         const second = this.nodes.get(secondNode);
 
         if(first && second) {
-            first.removeAdjacent(second.getValue())
             second.removeAdjacent(first.getValue())
+            first.removeAdjacent(second.getValue())
         }
     }
 

@@ -12,11 +12,8 @@ export class Node {
         this.adjacent = [...this.adjacent, node]
     }
 
-    removeAdjacent(nodeValue : string) : Node | null {
-        const index = this.adjacent.findIndex( (node) => node.value === nodeValue);
-        if(index === -1) return;
-
-        return this.adjacent.splice(index, 1)[0]
+    removeAdjacent(nodeValue : string) : void {
+        this.adjacent = this.adjacent.filter((node) => node.getValue() !== nodeValue);
     }
 
     getValue() : string {
