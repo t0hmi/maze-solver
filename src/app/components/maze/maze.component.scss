@@ -40,5 +40,9 @@ table {
         &:hover {
             background-color: rgb(231, 231, 254) !important;
         }
+
+        &.wall {
+            background-color: #11133E !important;
+        }
     }
 }

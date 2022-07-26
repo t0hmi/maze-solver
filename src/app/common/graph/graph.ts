@@ -37,6 +37,13 @@ export class Graph {
         second.addAdjacent(first);
     }
 
+    addEdgeFromTo(from : string, to : string) : void {
+        const fromNode = this.addNode(from);
+        const toNode = this.addNode(to);
+
+        fromNode.addAdjacent(toNode);
+    }
+
     removeEdge(firstNode : string, secondNode : string) : void {
         const first = this.nodes.get(firstNode);
         const second = this.nodes.get(secondNode);
@@ -45,6 +52,10 @@ export class Graph {
             second.removeAdjacent(first.getValue())
             first.removeAdjacent(second.getValue())
         }
+    }
+
+    getNode(x: number, y: number) : Node | null {
+        return this.nodes.get(`${x}-${y}`)
     }
 
     

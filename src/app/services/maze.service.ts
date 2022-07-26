@@ -10,30 +10,20 @@ export class MazeService {
 
   graph : Graph;
 
+  xSize
+  ySize
+
   initializeMaze(x : number, y : number) : boolean{
 
     this.graph = new Graph();
+
+    this.xSize = x;
+    this.ySize = y;
 
     for(let i = 0; i < x; i++) {
       for(let j = 0; j < y; j++) {
         
         const actualNode = this.graph.addNode(`${i}-${j}`);
-
-        // if(i !== x) {
-        //   actualNode.addAdjacent(this.graph.addNode(`${i + 1}${j}`))
-        // }
-
-        // if(i !== 0) {
-        //   actualNode.addAdjacent(this.graph.addNode(`${i - 1}${j}`)) 
-        // }
-
-        // if(j !== y) {
-        //   actualNode.addAdjacent(this.graph.addNode(`${i}${j + 1}`));
-        // }
-
-        // if(j !== 0) {
-        //   actualNode.addAdjacent(this.graph.addNode(`${i}${j - 1}`));
-        // }
 
         let adjacent : string[] = [];
 
@@ -70,6 +60,36 @@ export class MazeService {
 
   addWall(x: number, y:number) : Node {
     return this.graph.removeNode(`${x}-${y}`);
+  }
+
+  removeWall(x: number, y: number) : Node {
+    const node = this.graph.getNode(x,y);
+    let adjacent = []
+    if(x > 0)
+    adjacent.push(`${x - 1}-${y}`);
+    
+    if(x < this.xSize - 1)
+    adjacent.push(`${x + 1}-${y}`);
+    
+    if(y > 0)
+    adjacent.push(`${x}-${y - 1}`);
+    
+    if(y < this.ySize - 1)
+    adjacent.push(`${x}-${y + 1}`);
+
+    if(adjacent.length > 0) {
+      adjacent.forEach(a => {
+        node.addAdjacent(this.graph.addNode(a))
+      })
+    }
+
+    node.getAdjacent().forEach(adjacentNode => {
+      this.graph.addEdgeFromTo(adjacentNode.getValue(), node.getValue())
+    })
+
+    console.log(node, node.getAdjacent())
+
+    return node;
   }
 
   getCell(x: number,y: number) : Node {

@@ -1,7 +1,7 @@
 <div class="maze" *ngIf="(mazeWidth$ | async) !== 0 && isReady else loading">
     <table>
         <tr *ngFor="let y of rows">
-            <td *ngFor="let x of columns" [ngStyle]="{'width.px': cellWidth, 'height.px': cellWidth}" (click)="toggleWall(x,y)"></td>
+            <td [appCell] [x]="x" [y]="y" *ngFor="let x of columns" [ngStyle]="{'width.px': cellWidth, 'height.px': cellWidth}"  ></td>
         </tr>
     </table>
 </div>
