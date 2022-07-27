@@ -36,6 +36,19 @@ table {
 
     td {
         cursor: pointer;
+        position: relative;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0%;
+            height: 0%;
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+            transition: all 1s ease;
+        }
 
         &:hover {
             background-color: rgb(231, 231, 254) !important;
@@ -43,6 +56,23 @@ table {
 
         &.wall {
             background-color: #11133E !important;
+        }
+
+        &.start {
+            background-color: green !important;
+        }
+
+        &.finish {
+            background-color: red !important;
+        }
+
+        &.processed {
+            &::before {
+                width: 80%;
+                height: 80%;
+                background: rgb(2,0,36) !important;
+                background: linear-gradient(150deg, rgba(2,0,36,1) -50%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 170%) !important;
+            }
         }
     }
 }

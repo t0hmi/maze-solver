@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { MazeService } from 'src/app/services/maze.service';
 import {
   MazeGenerationAlgorithm,
   SolvingAlgorithm,
@@ -35,7 +36,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   mazeGenerationAlgorithm: typeof MazeGenerationAlgorithm =
     MazeGenerationAlgorithm;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private mazeService : MazeService) {}
 
   ngAfterViewInit(): void {
     this.store.dispatch(
@@ -56,5 +57,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     );
   }
 
+  clearWall() : void {
+  }
+
   ngOnInit(): void {}
+
+  start() {
+    this.mazeService.dfs();
+  }
 }

@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Stack } from '../common/data-structures/stack';
 import { Graph } from '../common/graph/graph';
 import { Node } from '../common/graph/node';
+import { Settings } from '../common/settings';
 import { MazeGenerationAlgorithm, SolvingAlgorithm } from '../store/form';
+import { CellProcessorService } from './cell-processor.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +13,17 @@ export class MazeService {
 
   graph : Graph;
 
-  xSize
-  ySize
+  xSize : number;
+  ySize : number;
+
+  startCoords : string;
+  finishCoords : string;  
+
+  startX: number;
+  startY: number;
+
+  finishX: number;
+  finishY: number
 
   initializeMaze(x : number, y : number) : boolean{
 
@@ -19,6 +31,17 @@ export class MazeService {
 
     this.xSize = x;
     this.ySize = y;
+
+    this.startX = Math.round((x/2)/2);
+    this.startY = Math.round(y/2);
+
+    this.finishX = Math.round((x/2) + (x/2)/2);
+    this.finishY = Math.round(y/2);
+
+    this.startCoords = `${this.startX}-${this.startY}`
+    this.finishCoords = `${this.finishX}-${this.finishY}`
+
+
 
     for(let i = 0; i < x; i++) {
       for(let j = 0; j < y; j++) {
@@ -44,11 +67,8 @@ export class MazeService {
             actualNode.addAdjacent(this.graph.addNode(a))
           })
         }
-
       }
-
     }
-
     return true;
   }
  
@@ -100,6 +120,43 @@ export class MazeService {
     return this.getCell(x,y).getAdjacent().length === 0;
   }
   
-  constructor() {
+  constructor(private cellProcessor : CellProcessorService) {
+  }
+
+  async dfs() {
+    let visited : Map<string, Node> = new Map();
+    
+    let stack = new Stack<Node>()
+
+    stack.push(this.graph.getNode(this.startX, this.startY));
+
+    let currentNode : Node;
+    let isFinishFind = false;
+
+    while(!stack.isEmpty() || !isFinishFind) {
+      currentNode = stack.pop();
+      if(!visited.get(currentNode.getValue())) {
+
+        visited.set(currentNode.getValue(), currentNode);
+        
+        if(currentNode.getValue() === this.finishCoords) {
+          isFinishFind = true;
+          break;
+        } 
+        
+        await this.sleep(100)
+        
+        this.cellProcessor.addNewProcessedCell(currentNode.getValue())
+        currentNode.getAdjacent().forEach(node => {
+          stack.push(node);
+        })
+
+      }
+    }
+  }
+
+
+  private sleep(delay) {
+    return new Promise((resolve) => setTimeout(resolve, delay))
   }
 }

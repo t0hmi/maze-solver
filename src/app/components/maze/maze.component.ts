@@ -2,6 +2,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Component,
+  HostListener,
   OnInit,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -35,6 +36,7 @@ export class MazeComponent implements OnInit, AfterViewInit {
 
   constructor(private store: Store, private mazeService : MazeService) {}
 
+  @HostListener('window:resize', ['$event'])
   ngAfterViewInit(): void {
     combineLatest([this.mazeWidth$, this.mazeHeight$])
       .pipe(
