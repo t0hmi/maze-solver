@@ -1,19 +1,19 @@
 export class Stack<T> {
 
-    private item : T[] = [];
+    private items : T[] = [];
 
     push(item : T) {
-        this.item.push(item);
+        this.items.push(item);
     }
     pop() : T | null{
-        return this.item.pop()
+        return this.items.pop()
     }
     peek() : T | null{
-        return this.item.length === 0 ? null : this.item[this.item.length - 1]
+        return this.items.length === 0 ? null : this.items[this.items.length - 1]
     }
 
     isEmpty() : boolean {
-        return this.item.length === 0;
+        return this.items.length === 0;
     }
 
 }

@@ -59,19 +59,24 @@ table {
         }
 
         &.start {
-            background-color: green !important;
+            background: #11998e;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(45deg, #38ef7d, #11993a);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(45deg, #38ef7d, #11998e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
 
         &.finish {
-            background-color: red !important;
+            background: #D31027;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(45deg, #EA384D, #b00b1e);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(45deg, #EA384D, #b00b1e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
         }
 
-        &.processed {
+        &.processed:not(.start) {
             &::before {
                 width: 80%;
                 height: 80%;
                 background: rgb(2,0,36) !important;
-                background: linear-gradient(150deg, rgba(2,0,36,1) -50%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 170%) !important;
+                background: linear-gradient(150deg, rgb(32, 32, 172) 35%, rgba(0,212,255,1) 170%) !important;
             }
         }
     }

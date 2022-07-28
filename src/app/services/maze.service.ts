@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Queue } from '../common/data-structures/queue';
 import { Stack } from '../common/data-structures/stack';
 import { Graph } from '../common/graph/graph';
 import { Node } from '../common/graph/node';
 import { Settings } from '../common/settings';
 import { MazeGenerationAlgorithm, SolvingAlgorithm } from '../store/form';
+import { MazeAction } from '../store/maze/maze.action';
+import { MazeSelector } from '../store/maze/maze.selector';
 import { CellProcessorService } from './cell-processor.service';
 
 @Injectable({
@@ -23,7 +27,17 @@ export class MazeService {
   startY: number;
 
   finishX: number;
-  finishY: number
+  finishY: number;
+
+  isProcessing;
+
+  constructor(private cellProcessor : CellProcessorService, 
+    private store : Store) {
+      this.store.select(MazeSelector.selectMazeIsProcessing).subscribe(isProcessing => {
+        this.isProcessing = isProcessing;
+      })
+    }
+
 
   initializeMaze(x : number, y : number) : boolean{
 
@@ -41,6 +55,7 @@ export class MazeService {
     this.startCoords = `${this.startX}-${this.startY}`
     this.finishCoords = `${this.finishX}-${this.finishY}`
 
+    this.store.dispatch(MazeAction.setMazeMarkers({finishCoords : this.finishCoords, startCoords : this.startCoords}))
 
 
     for(let i = 0; i < x; i++) {
@@ -120,8 +135,6 @@ export class MazeService {
     return this.getCell(x,y).getAdjacent().length === 0;
   }
   
-  constructor(private cellProcessor : CellProcessorService) {
-  }
 
   async dfs() {
     let visited : Map<string, Node> = new Map();
@@ -134,6 +147,9 @@ export class MazeService {
     let isFinishFind = false;
 
     while(!stack.isEmpty() || !isFinishFind) {
+
+      if(!this.isProcessing) return;
+
       currentNode = stack.pop();
       if(!visited.get(currentNode.getValue())) {
 
@@ -147,6 +163,7 @@ export class MazeService {
         await this.sleep(100)
         
         this.cellProcessor.addNewProcessedCell(currentNode.getValue())
+        
         currentNode.getAdjacent().forEach(node => {
           stack.push(node);
         })
@@ -155,8 +172,117 @@ export class MazeService {
     }
   }
 
+  async bfs() {
+     let visited = new Map<string,Node>()
+     let queue = new Queue<Node>();
+
+     queue.push(this.graph.getNode(this.startX, this.startY))
+     
+     let currentNode : Node;
+     let isFinishFind = false;
+
+     while(!queue.isEmpty() || isFinishFind) {
+      
+       
+      currentNode = queue.pop();
+      
+      if(!visited.get(currentNode.getValue())) {
+        visited.set(currentNode.getValue(), currentNode);
+        
+        if(currentNode.getValue() === this.finishCoords) {
+          isFinishFind = true;
+          break;
+        }
+        
+        await this.sleep(10);
+        
+        
+        if(!this.isProcessing) return;
+        this.cellProcessor.addNewProcessedCell(currentNode.getValue())
+        
+        currentNode.getAdjacent().forEach(node => {
+          if(!visited.get(node.getValue())) {
+            queue.push(node);
+          }
+        })
+      }
+
+     }
+  }
+
 
   private sleep(delay) {
     return new Promise((resolve) => setTimeout(resolve, delay))
+  }
+
+  addBorders() {
+    this.store.dispatch(MazeAction.setMazeIsWallsSet({isWallsSet : true}))
+    for(let i = 0; i < this.xSize; i++) {
+      this.addWall(i,0);
+      this.cellProcessor.addWallCell(`${i}-0`)
+      this.graph.getNode(i,0).setIsBorder(true);
+      this.addWall(i, this.ySize - 1)
+      this.cellProcessor.addWallCell(`${i}-${this.ySize - 1}`)
+      this.graph.getNode(i, this.ySize - 1).setIsBorder(true);
+    }
+
+    for(let j = 0; j < this.ySize; j++) {
+      this.addWall(0, j);
+      this.cellProcessor.addWallCell(`0-${j}`);
+      this.graph.getNode(0, j).setIsBorder(true);
+      this.addWall(this.xSize - 1, j);
+      this.cellProcessor.addWallCell(`${this.xSize - 1}-${j}`)
+      this.graph.getNode(this.xSize - 1, j).setIsBorder(true);
+    }
+  }
+
+  initMazeGeneration() {
+    this.startX = 1;
+    this.startY = 1;
+    this.finishX = this.xSize - 2;
+    this.finishY = this.ySize - 2;
+
+    this.startCoords = `${this.startX}-${this.startY}`
+    this.finishCoords = `${this.finishX}-${this.finishY}`
+
+    this.store.dispatch(MazeAction.setMazeMarkers({finishCoords : this.finishCoords, startCoords : this.startCoords}))
+
+
+    this.addBorders();
+  }
+
+  randomizedPrims() {
+    this.initializeFullWall(); 
+
+    let stack = new Stack<Node>();
+    let visited = new Map<string, Node>();
+
+    let currentNode = this.graph.getNode(this.startX, this.startY);
+    stack.push(currentNode);
+    visited.set(this.startCoords, currentNode);
+
+    while(!stack.isEmpty()) {
+      currentNode = stack.pop();
+
+      // todo have a function to get adjacentWall
+      const adjacentUnvisited = currentNode.getNearWall().filter(node => (!visited.get(node.getValue()) && !node.getIsBorder()));
+      const selectedNode = adjacentUnvisited[Math.round(Math.random() * adjacentUnvisited.length - 1)]
+      console.log(adjacentUnvisited)
+      this.removeWall(selectedNode.getX(), selectedNode.getY());
+      this.cellProcessor.addBlankCell(selectedNode.getValue());
+      visited.set(selectedNode.getValue(), selectedNode);
+      stack.push(selectedNode);
+    }
+  }
+
+  initializeFullWall() {
+    for(let i = 0; i < this.xSize; i++){
+      for(let j = 0; j < this.ySize; j++) {
+        if(!(`${i}-${j}` === this.finishCoords ||`${i}-${j}`===this.startCoords)) {
+          this.addWall(i, j);
+          this.cellProcessor.addWallCell(`${i}-${j}`);
+        }
+      }
+    }
   }
 }

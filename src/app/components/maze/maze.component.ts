@@ -10,6 +10,7 @@ import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Settings } from 'src/app/common/settings';
 import { MazeService } from 'src/app/services/maze.service';
+import { MazeAction } from 'src/app/store/maze/maze.action';
 import { MazeSelector } from 'src/app/store/maze/maze.selector';
 
 @Component({
@@ -38,6 +39,9 @@ export class MazeComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   ngAfterViewInit(): void {
+    this.store.dispatch(MazeAction.setMazeIsProcessing({isProcessing : false}))
+    this.store.dispatch(MazeAction.setMazeIsWallsSet({isWallsSet : false}))
+    
     combineLatest([this.mazeWidth$, this.mazeHeight$])
       .pipe(
         map(([width, height]) => {

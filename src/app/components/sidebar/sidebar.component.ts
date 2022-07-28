@@ -3,9 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
-  OnChanges,
   OnInit,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -58,11 +56,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   clearWall() : void {
+    this.store.dispatch(MazeAction.setMazeIsProcessing({isProcessing : false}));
+    this.store.dispatch(MazeAction.setMazeIsWallsSet({isWallsSet: false}));
   }
 
   ngOnInit(): void {}
 
   start() {
-    this.mazeService.dfs();
+    this.store.dispatch(MazeAction.setMazeIsProcessing({isProcessing : true}));
+
+    this.mazeService.randomizedPrims();
   }
 }
